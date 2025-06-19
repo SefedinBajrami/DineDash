@@ -6,54 +6,35 @@ import userRouter from "./routes/userRoute.js"
 import 'dotenv/config'
 import cartRouter from "./routes/cartRoute.js"
 import orderRouter from "./routes/orderRoute.js"
-import restaurantRouter from "./routes/restaurantRoute.js";
+import restaurantRouter from "./routes/restaurantRoute.js"
 
-
-
-//app config
+// App config
 const app = express()
-const port = 4000
+const port = process.env.PORT || 4000
 
-//middleware 
-app.use(express.json()) // requests from frontend will be parsed to backend by this json
-app.use(cors()) //to use any backend from frontend
+// Middleware
+app.use(cors()) // ✅ Enable CORS
+app.use(express.json()) // ✅ Parse JSON bodies
 
+// DB Connection
+connectDB()
 
-//DB Connection
-connectDB();
-
-
-// API endpoints
+// API Endpoints
 app.use("/api/food", foodRouter)
-
-// to access files on frontend
-app.use("/images", express.static('uploads'))
-
 app.use("/api/user", userRouter)
-
 app.use("/api/cart", cartRouter)
-
 app.use("/api/order", orderRouter)
- 
-app.use("/api/restaurant", restaurantRouter);
+app.use("/api/restaurant", restaurantRouter)
 
+// Serve uploaded images
+app.use("/images", express.static("uploads"))
 
-
-
-
-// decrypt data from server
-app.get("/", (req, res) => {    
-    res.send("API Working")    
-})                            
-
-
-// to run express server
-app.listen(port, () => {
-    console.log(`Server Started on http://localhost:${port}`)
+// Test endpoint
+app.get("/", (req, res) => {
+    res.send("API Working")
 })
 
-
-
-
-
-// mongodb+srv://hamdi100junior:DbPass123@cluster0.keyc2.mongodb.net/?
+// Start server
+app.listen(port, () => {
+    console.log(`Server started on http://localhost:${port}`)
+})
